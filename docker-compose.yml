@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: grid_forecast_app
+    ports:
+      - "8000:8000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-2.5-flash}
+      - DEFAULT_GATE_CLOSURE_HOUR=11
+    volumes:
+      - ./backend/app/data:/app/backend/app/data
+    restart: unless-stopped
