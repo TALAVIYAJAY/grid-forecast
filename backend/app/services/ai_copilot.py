@@ -218,6 +218,4 @@ async def generate_gemini_advisory(metrics: DailyMetrics) -> Dict[str, Any]:
 
         except Exception as e_backup:
             logger.error("Backup model %s also failed: %s. Falling back to local rules engine.", BACKUP_MODEL, e_backup)
-            fallback = generate_local_rule_based_advisory(metrics)
-            fallback["gemini_error"] = f"Primary: {e_primary} | Backup: {e_backup}"
-            return fallback
+            return generate_local_rule_based_advisory(metrics)
