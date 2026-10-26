@@ -9,7 +9,7 @@ interface DayAheadCopilotProps {
 }
 
 const LOADING_MESSAGES = [
-  "Connecting to Google Gemini 3.6 Flash reasoning engine...",
+  "Connecting to GridAI Copilot reasoning engine...",
   "Evaluating 48 settlement period actuals against D-1 day-ahead forecasts...",
   "Analyzing volume-weighted wMAPE & peak deficit shortfall exposure...",
   "Formulating commercial bidding recommendations & thermal buffer strategy...",
@@ -63,7 +63,7 @@ export const DayAheadCopilot: React.FC<DayAheadCopilotProps> = ({
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
                     </span>
-                    <span>Gemini 3.6 Flash Active</span>
+                    <span>AI Copilot Active</span>
                   </span>
                 </div>
               </div>
@@ -91,7 +91,7 @@ export const DayAheadCopilot: React.FC<DayAheadCopilotProps> = ({
             </div>
 
             <div className="flex items-center justify-between text-[10px] text-slate-500 pt-1">
-              <span>Primary Engine: Google Gemini 3.6 Flash (Tenacity retries active)</span>
+              <span>Decision Engine: GridForecast Autonomous Trading Copilot</span>
               <span>EPEX SPOT / Nord Pool Gate Closure</span>
             </div>
           </div>
@@ -176,7 +176,7 @@ export const DayAheadCopilot: React.FC<DayAheadCopilotProps> = ({
           {recommendation}
         </p>
         <div className="flex items-center justify-between text-[11px] text-slate-500 pt-1">
-          <span>Model: {model_used} • Forecast Reliability: {wmape_assessment}</span>
+          <span>Engine: {model_used} • Forecast Reliability: {wmape_assessment}</span>
           <span className="text-slate-600">UK Wholesale Day-Ahead Decision Support</span>
         </div>
       </div>

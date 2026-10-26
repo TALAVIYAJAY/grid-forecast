@@ -114,8 +114,8 @@ def generate_local_rule_based_advisory(metrics: DailyMetrics) -> Dict[str, Any]:
         "peak_shortfall_risk_mw": max_under,
         "peak_excess_risk_mw": max_over,
         "recommendation": recommendation,
-        "provider": "Local Energy Market Rules Engine",
-        "model_used": "Deterministic Power Heuristics"
+        "provider": "GridForecast Market Heuristics",
+        "model_used": "Deterministic Power Rules"
     }
 
 
@@ -198,8 +198,8 @@ async def generate_gemini_advisory(metrics: DailyMetrics) -> Dict[str, Any]:
         if clean_text.startswith("json"):
             clean_text = clean_text[4:].strip()
         data = json.loads(clean_text)
-        data["provider"] = "Google Gemini AI"
-        data["model_used"] = PRIMARY_MODEL
+        data["provider"] = "GridForecast AI Copilot"
+        data["model_used"] = "Autonomous Dispatch Agent"
         return data
 
     except Exception as e_primary:
@@ -212,8 +212,8 @@ async def generate_gemini_advisory(metrics: DailyMetrics) -> Dict[str, Any]:
             if clean_text.startswith("json"):
                 clean_text = clean_text[4:].strip()
             data = json.loads(clean_text)
-            data["provider"] = "Google Gemini AI (Backup)"
-            data["model_used"] = BACKUP_MODEL
+            data["provider"] = "GridForecast AI Copilot (Adaptive)"
+            data["model_used"] = "Autonomous Dispatch Agent"
             return data
 
         except Exception as e_backup:

@@ -62,9 +62,8 @@ def get_health():
             "db_path": settings.db_path,
             "actual_wind_records": actual_cnt,
             "forecast_records": forecast_cnt,
-            "ai_primary_model": PRIMARY_MODEL,
-            "ai_backup_model": BACKUP_MODEL,
-            "has_gemini_key": bool(settings.gemini_api_key)
+            "ai_copilot_engine": "Multi-Tier Autonomous Agent",
+            "has_copilot_key": bool(settings.gemini_api_key)
         }
     except Exception as e:
         return {
