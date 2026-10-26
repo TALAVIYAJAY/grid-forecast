@@ -21,7 +21,11 @@ from backend.app.services.day_ahead_service import (
     get_day_ahead_evaluation,
     get_monthly_summary
 )
-from backend.app.services.ai_copilot import generate_gemini_advisory
+from backend.app.services.ai_copilot import (
+    generate_gemini_advisory,
+    PRIMARY_MODEL,
+    BACKUP_MODEL
+)
 
 router = APIRouter(prefix="/api", tags=["Day-Ahead Forecast Analytics"])
 
@@ -43,7 +47,8 @@ def get_health():
             "db_path": settings.db_path,
             "actual_wind_records": actual_cnt,
             "forecast_records": forecast_cnt,
-            "ai_model": settings.gemini_model,
+            "ai_primary_model": PRIMARY_MODEL,
+            "ai_backup_model": BACKUP_MODEL,
             "has_gemini_key": bool(settings.gemini_api_key)
         }
     except Exception as e:

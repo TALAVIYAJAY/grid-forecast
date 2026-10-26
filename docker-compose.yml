@@ -10,7 +10,6 @@ services:
       - "8000:8000"
     environment:
       - GEMINI_API_KEY=${GEMINI_API_KEY:-}
-      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-3.6-flash}
       - DEFAULT_GATE_CLOSURE_HOUR=11
     volumes:
       - ./backend/app/data:/app/backend/app/data
