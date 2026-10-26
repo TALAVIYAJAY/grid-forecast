@@ -175,4 +175,5 @@ python -m pytest backend/app/tests -v
 ---
 
 ## ☁️ Live Cloud Deployment
-* **Live Web Application:** *[Insert your Vercel or Render live URL here]*
+* **Live Web Application:** [https://grid-forecast-six.vercel.app](https://grid-forecast-six.vercel.app)
+* **Interactive API Documentation (Swagger):** [https://grid-forecast-six.vercel.app/docs](https://grid-forecast-six.vercel.app/docs)
