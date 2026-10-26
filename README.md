@@ -10,7 +10,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6.svg)](https://www.typescriptlang.org/)
 [![Tests](https://img.shields.io/badge/Tests-9%20Passing-brightgreen.svg)]()
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg)](Dockerfile)
-[![AI Integration](https://img.shields.io/badge/AI-Gemini%203.6%20Flash-orange.svg)]()
+[![AI Integration](https://img.shields.io/badge/AI-Autonomous%20Copilot-orange.svg)]()
 
 ---
 
@@ -99,32 +99,33 @@ docker compose up --build
 │   │   ├── config.py                # App configuration, settings, and env variables
 │   │   ├── api/
 │   │   │   ├── __init__.py
-│   │   │   └── routes.py            # REST endpoints (/evaluation, /dates, /copilot, /export-csv)
+│   │   │   └── routes.py            # REST endpoints (/health, /dates, /evaluation, /copilot, /monthly-summary, /raw-data, /export-csv)
 │   │   ├── services/
 │   │   │   ├── __init__.py
 │   │   │   ├── data_fetcher.py      # Elexon BMRS ingestion service (FUELHH actuals & WINDFOR forecasts)
-│   │   │   ├── day_ahead_service.py # D-1 cutoff enforcement & SQL window-function alignment
+│   │   │   ├── day_ahead_service.py # D-1 cutoff enforcement, SQL window-function alignment, and raw data queries
 │   │   │   ├── metrics_engine.py    # Math engine (MAE, RMSE, wMAPE, Mean Bias, Max Deficit)
-│   │   │   └── ai_copilot.py        # Gemini 2.5 Flash trading advisory (with rule-based fallback)
+│   │   │   └── ai_copilot.py        # Multi-tier AI trading advisory (with rule-based fallback)
 │   │   ├── data/
 │   │   │   └── grid_forecast.db     # SQLite database with 1,489 actuals & 19,272 forecasts
 │   │   └── tests/
 │   │       ├── __init__.py
 │   │       ├── test_metrics.py      # Unit tests for statistical formulas and zero-error conditions
-│   │       └── test_api.py          # API route tests, data assertions, and CSV stream verification
+│   │       └── test_api.py          # API route tests, data assertions, raw data queries, and CSV stream verification
 │   └── requirements.txt             # Python backend dependencies
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── Header.tsx           # Brand header, date picker, D-1 gate cutoff selector, tab toggle
+│   │   │   ├── Header.tsx           # Brand header, date picker, D-1 gate cutoff selector, 3-way tab toggle
 │   │   │   ├── MetricCards.tsx      # 6 instant KPI cards (MAE, RMSE, wMAPE, Bias, Deficit, Volume)
 │   │   │   ├── ForecastChart.tsx    # 48 settlement periods time-series chart (Actual vs Forecast)
 │   │   │   ├── ErrorAnalysisChart.tsx # Error delta distribution chart ((Forecast - Actual) in MW)
-│   │   │   ├── DayAheadCopilot.tsx  # Gemini AI Commercial Bidding Memo card
+│   │   │   ├── DayAheadCopilot.tsx  # Autonomous AI Commercial Bidding Memo card with dynamic reasoning animation
 │   │   │   ├── SettlementTable.tsx  # 48 settlement periods data table with status filtering
-│   │   │   └── MonthlyBenchmarkView.tsx # Full month January 2026 31-day macro benchmark view
+│   │   │   ├── MonthlyBenchmarkView.tsx # Full month January 2026 31-day macro benchmark view
+│   │   │   └── RawDataExplorer.tsx  # Ground-truth Elexon stream inspector (FUELHH actuals & WINDFOR forecasts)
 │   │   ├── types/
-│   │   │   └── index.ts             # TypeScript interfaces for API contracts
+│   │   │   └── index.ts             # TypeScript interfaces for API contracts & telemetry data
 │   │   ├── App.tsx                  # Root React application coordinating state and data fetching
 │   │   ├── main.tsx                 # React DOM mount point
 │   │   └── index.css                # Tailwind CSS imports & dark-theme styling
