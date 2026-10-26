@@ -9,8 +9,12 @@ import sqlite3
 import logging
 from datetime import datetime, timedelta, timezone
 from typing import List, Dict, Any, Optional
-from backend.app.config import settings
-from backend.app.services.metrics_engine import calculate_metrics, DailyMetrics
+try:
+    from app.config import settings
+    from app.services.metrics_engine import calculate_metrics, DailyMetrics
+except ModuleNotFoundError:
+    from backend.app.config import settings
+    from backend.app.services.metrics_engine import calculate_metrics, DailyMetrics
 
 logger = logging.getLogger(__name__)
 

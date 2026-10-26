@@ -15,17 +15,30 @@ import sqlite3
 from typing import Optional
 from fastapi import APIRouter, HTTPException, Query, Response
 
-from backend.app.config import settings
-from backend.app.services.day_ahead_service import (
-    get_available_dates,
-    get_day_ahead_evaluation,
-    get_monthly_summary
-)
-from backend.app.services.ai_copilot import (
-    generate_gemini_advisory,
-    PRIMARY_MODEL,
-    BACKUP_MODEL
-)
+try:
+    from app.config import settings
+    from app.services.day_ahead_service import (
+        get_available_dates,
+        get_day_ahead_evaluation,
+        get_monthly_summary
+    )
+    from app.services.ai_copilot import (
+        generate_gemini_advisory,
+        PRIMARY_MODEL,
+        BACKUP_MODEL
+    )
+except ModuleNotFoundError:
+    from backend.app.config import settings
+    from backend.app.services.day_ahead_service import (
+        get_available_dates,
+        get_day_ahead_evaluation,
+        get_monthly_summary
+    )
+    from backend.app.services.ai_copilot import (
+        generate_gemini_advisory,
+        PRIMARY_MODEL,
+        BACKUP_MODEL
+    )
 
 router = APIRouter(prefix="/api", tags=["Day-Ahead Forecast Analytics"])
 

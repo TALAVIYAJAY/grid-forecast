@@ -9,8 +9,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 
-from backend.app.config import settings
-from backend.app.api.routes import router
+try:
+    from app.config import settings
+    from app.api.routes import router
+except ModuleNotFoundError:
+    from backend.app.config import settings
+    from backend.app.api.routes import router
 
 app = FastAPI(
     title=settings.app_name,

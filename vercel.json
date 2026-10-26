@@ -10,6 +10,11 @@
       "framework": "vite"
     }
   },
+  "functions": {
+    "**/*.py": {
+      "includeFiles": "**/*.db"
+    }
+  },
   "rewrites": [
     {
       "source": "/api/(.*)",

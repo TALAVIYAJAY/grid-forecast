@@ -21,8 +21,12 @@ from tenacity import (
     wait_exponential,
 )
 
-from backend.app.config import settings
-from backend.app.services.metrics_engine import DailyMetrics
+try:
+    from app.config import settings
+    from app.services.metrics_engine import DailyMetrics
+except ModuleNotFoundError:
+    from backend.app.config import settings
+    from backend.app.services.metrics_engine import DailyMetrics
 
 logger = logging.getLogger(__name__)
 

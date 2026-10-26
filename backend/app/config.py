@@ -3,15 +3,16 @@ from pathlib import Path
 from pydantic import BaseModel
 from dotenv import load_dotenv
 
-ROOT_DIR = Path(__file__).resolve().parent.parent.parent
-# Load .env from project root or backend folder
-load_dotenv(ROOT_DIR / ".env")
-load_dotenv(ROOT_DIR / "backend" / ".env")
-load_dotenv()
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = BASE_DIR / "app" / "data"
+# Locate directories relative to this file
+APP_DIR = Path(__file__).resolve().parent
+DATA_DIR = APP_DIR / "data"
 DB_PATH = DATA_DIR / "grid_forecast.db"
+
+# Load .env if present from project root, backend folder, or current working directory
+load_dotenv(APP_DIR.parent.parent / ".env")
+load_dotenv(APP_DIR.parent / ".env")
+load_dotenv(APP_DIR / ".env")
+load_dotenv()
 
 class Settings(BaseModel):
     app_name: str = "GridForecast API"
