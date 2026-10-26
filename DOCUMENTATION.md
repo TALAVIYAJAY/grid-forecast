@@ -112,7 +112,7 @@ $$\text{Bias} = \frac{1}{N} \sum_{i=1}^N (\hat{y}_i - y_i)$$
 
 ## 5. AI Day-Ahead Trading Copilot
 
-The AI Copilot connects to **Google Gemini 2.5 Flash** (via `google-genai` SDK) to act as an automated commercial dispatch analyst.
+The AI Copilot connects to **Google Gemini 3.6 Flash** (via `google-genai` SDK) to act as an automated commercial dispatch analyst.
 
 ### Operational Workflow:
 1. Feeds summary metrics, error bias, peak deficit settlement periods, and volume deltas into a specialized power market prompt.

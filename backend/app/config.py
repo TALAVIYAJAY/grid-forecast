@@ -29,7 +29,7 @@ class Settings(BaseModel):
     
     # AI Copilot configuration
     gemini_api_key: str = os.getenv("GEMINI_API_KEY", "")
-    gemini_model: str = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+    gemini_model: str = os.getenv("GEMINI_MODEL", "gemini-3.6-flash")
     
     # CORS
     cors_origins: list = [

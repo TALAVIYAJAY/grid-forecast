@@ -10,7 +10,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.7-3178C6.svg)](https://www.typescriptlang.org/)
 [![Tests](https://img.shields.io/badge/Tests-9%20Passing-brightgreen.svg)]()
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg)](Dockerfile)
-[![AI Integration](https://img.shields.io/badge/AI-Gemini%202.5%20Flash-orange.svg)]()
+[![AI Integration](https://img.shields.io/badge/AI-Gemini%203.6%20Flash-orange.svg)]()
 
 ---
 
@@ -160,7 +160,7 @@ Let $y_i$ be actual delivered wind power and $\hat{y}_i$ be the day-ahead foreca
 
 As required by the assignment guidelines:
 * **AI Coding Assistance:** Google Antigravity (powered by Gemini) was utilized to assist with scaffolding, boilerplate generation, documentation formatting, and unit test structuring.
-* **In-App AI Integration:** Google Gemini 2.5 Flash is integrated inside the application via [`backend/app/services/ai_copilot.py`](backend/app/services/ai_copilot.py) to provide automated Day-Ahead trading advisory memos. A deterministic local rules engine is also built-in as an offline fallback.
+* **In-App AI Integration:** Google Gemini 3.6 Flash is integrated inside the application via [`backend/app/services/ai_copilot.py`](backend/app/services/ai_copilot.py) to provide automated Day-Ahead trading advisory memos. A deterministic local rules engine is also built-in as an offline fallback.
 
 ---
 
