@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { CopilotAdvisory } from '../types';
-import { Sparkles, AlertCircle, CheckCircle2, RefreshCw, Bot } from 'lucide-react';
+import { Sparkles, AlertCircle, CheckCircle2, RefreshCw, Bot, Cpu } from 'lucide-react';
 
 interface DayAheadCopilotProps {
   advisory: CopilotAdvisory | null;
@@ -8,17 +8,94 @@ interface DayAheadCopilotProps {
   onRefresh: () => void;
 }
 
+const LOADING_MESSAGES = [
+  "Connecting to Google Gemini 3.6 Flash reasoning engine...",
+  "Evaluating 48 settlement period actuals against D-1 day-ahead forecasts...",
+  "Analyzing volume-weighted wMAPE & peak deficit shortfall exposure...",
+  "Formulating commercial bidding recommendations & thermal buffer strategy...",
+  "Synthesizing executive wholesale dispatch advisory memo..."
+];
+
 export const DayAheadCopilot: React.FC<DayAheadCopilotProps> = ({
   advisory,
   loading,
   onRefresh
 }) => {
+  const [msgIndex, setMsgIndex] = useState<number>(0);
+
+  // Cycle twinkling status messages every 2.2 seconds while loading
+  useEffect(() => {
+    if (!loading) {
+      setMsgIndex(0);
+      return;
+    }
+    const interval = setInterval(() => {
+      setMsgIndex((prev) => (prev + 1) % LOADING_MESSAGES.length);
+    }, 2200);
+    return () => clearInterval(interval);
+  }, [loading]);
+
+  // Luminous Twinkling AI Loading Card
   if (loading) {
     return (
-      <div className="bg-[#111827] border border-cyan-500/20 rounded-xl p-5 shadow-sm animate-pulse">
-        <div className="h-5 w-48 bg-slate-800 rounded mb-3" />
-        <div className="h-4 w-full bg-slate-800 rounded mb-2" />
-        <div className="h-4 w-3/4 bg-slate-800 rounded" />
+      <div className="bg-gradient-to-r from-[#111827] via-[#141E30] to-[#111827] border border-cyan-500/40 rounded-xl p-5 shadow-lg relative overflow-hidden animate-pulse-glow">
+        {/* Shimmer light beam moving across */}
+        <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-cyan-500/10 to-transparent animate-shimmer-wave pointer-events-none" />
+
+        {/* Ambient background glow */}
+        <div className="absolute -top-12 -right-12 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-12 -left-12 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 space-y-4">
+          {/* Header */}
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center space-x-2.5">
+              <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-cyan-500/20 to-indigo-500/20 text-cyan-400 flex items-center justify-center border border-cyan-500/40 shadow-sm shadow-cyan-500/30">
+                <Sparkles className="h-4 w-4 animate-twinkle text-cyan-300" />
+              </div>
+              <div>
+                <div className="flex items-center space-x-2">
+                  <h3 className="text-sm font-semibold text-white tracking-tight flex items-center gap-1.5">
+                    <span>AI Day-Ahead Procurement Advisory</span>
+                  </h3>
+                  <span className="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 flex items-center space-x-1.5">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
+                    </span>
+                    <span>Gemini 3.6 Flash Active</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Status indicator */}
+            <div className="flex items-center space-x-2 text-[11px] text-cyan-400 font-medium">
+              <Cpu className="h-3.5 w-3.5 animate-spin text-cyan-400" />
+              <span>Synthesizing Strategy...</span>
+            </div>
+          </div>
+
+          {/* Twinkling Message & Progress Box */}
+          <div className="bg-[#0B0F19]/80 border border-cyan-500/25 rounded-xl p-4 space-y-2.5">
+            <div className="flex items-center space-x-2.5">
+              <div className="h-2 w-2 rounded-full bg-cyan-400 animate-ping flex-shrink-0" />
+              <p className="text-xs font-medium text-cyan-200 tracking-wide transition-all duration-300">
+                {LOADING_MESSAGES[msgIndex]}
+              </p>
+            </div>
+
+            {/* Glowing animated progress line */}
+            <div className="w-full h-1.5 bg-slate-800/80 rounded-full overflow-hidden relative">
+              <div className="h-full bg-gradient-to-r from-cyan-500 via-indigo-400 to-teal-400 rounded-full w-full animate-shimmer-wave" />
+            </div>
+
+            <div className="flex items-center justify-between text-[10px] text-slate-500 pt-1">
+              <span>Primary Engine: Google Gemini 3.6 Flash (Tenacity retries active)</span>
+              <span>EPEX SPOT / Nord Pool Gate Closure</span>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -45,7 +122,7 @@ export const DayAheadCopilot: React.FC<DayAheadCopilotProps> = ({
       <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
         <div className="flex items-center space-x-2.5">
           <div className="h-7 w-7 rounded-lg bg-cyan-500/20 text-cyan-400 flex items-center justify-center border border-cyan-500/30">
-            <Sparkles className="h-4 w-4" />
+            <Sparkles className="h-4 w-4 text-cyan-300" />
           </div>
           <div>
             <div className="flex items-center space-x-2">

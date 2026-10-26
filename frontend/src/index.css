@@ -31,3 +31,46 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #374151;
 }
+
+/* AI Copilot Twinkling & Luminous Glow Animations */
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(0.92) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.18) rotate(15deg);
+    filter: drop-shadow(0 0 8px #22d3ee) drop-shadow(0 0 16px #818cf8);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px -3px rgba(6, 182, 212, 0.15), 0 0 6px -2px rgba(168, 85, 247, 0.15);
+  }
+  50% {
+    box-shadow: 0 0 30px 4px rgba(6, 182, 212, 0.35), 0 0 15px 2px rgba(168, 85, 247, 0.25);
+  }
+}
+
+@keyframes shimmerWave {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+.animate-twinkle {
+  animation: twinkle 2s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2.8s ease-in-out infinite;
+}
+
+.animate-shimmer-wave {
+  animation: shimmerWave 2.2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
