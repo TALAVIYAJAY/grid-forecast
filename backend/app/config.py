@@ -22,7 +22,7 @@ class Settings(BaseModel):
     )
     
     # Database
-    db_path: str = str(DB_PATH)
+    db_path: str = os.getenv("DB_PATH", str(DB_PATH))
     
     # Default UK Day-Ahead Auction Gate Closure (11:00 GMT on D-1)
     default_gate_closure_hour: int = int(os.getenv("DEFAULT_GATE_CLOSURE_HOUR", "11"))
