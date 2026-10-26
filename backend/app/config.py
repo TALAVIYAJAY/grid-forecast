@@ -3,7 +3,10 @@ from pathlib import Path
 from pydantic import BaseModel
 from dotenv import load_dotenv
 
-# Load .env if present
+ROOT_DIR = Path(__file__).resolve().parent.parent.parent
+# Load .env from project root or backend folder
+load_dotenv(ROOT_DIR / ".env")
+load_dotenv(ROOT_DIR / "backend" / ".env")
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
