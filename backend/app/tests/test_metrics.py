@@ -75,8 +75,43 @@ def test_wmape_handles_calm_wind():
     assert m.mae_mw == 50.0
 
 if __name__ == "__main__":
+    import time
+    if sys.platform == "win32":
+        try:
+            sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
+
+    start_time = time.time()
+    print("\n" + "=" * 74)
+    print("  GRIDFORECAST: Mathematical Metrics & Edge-Case Unit Tests")
+    print("=" * 74)
+
+    t0 = time.time()
     test_metrics_calculation_perfect_match()
+    ms = (time.time() - t0) * 1000
+    print(f"  [PASS] test_perfect_match_boundary ...... OK  ({ms:5.1f}ms)")
+    print(f"         + Zero-Error Bounds: MAE = 0.0 MW, RMSE = 0.0 MW, wMAPE = 0.0%")
+
+    t0 = time.time()
     test_metrics_over_forecasting()
+    ms = (time.time() - t0) * 1000
+    print(f"  [PASS] test_over_forecasting_bias ....... OK  ({ms:5.1f}ms)")
+    print(f"         + Systematic Over-Estimation: Bias = +200.0 MW (Under-Procurement Risk)")
+
+    t0 = time.time()
     test_metrics_under_forecasting()
+    ms = (time.time() - t0) * 1000
+    print(f"  [PASS] test_under_forecasting_bias ...... OK  ({ms:5.1f}ms)")
+    print(f"         + Systematic Under-Estimation: Bias = -300.0 MW (Thermal Backup Risk)")
+
+    t0 = time.time()
     test_wmape_handles_calm_wind()
-    print("All metric tests passed successfully!")
+    ms = (time.time() - t0) * 1000
+    print(f"  [PASS] test_calm_wind_zero_division ..... OK  ({ms:5.1f}ms)")
+    print(f"         + Low-Wind Safeguard: Volume wMAPE = 20.0% (Zero Division Protected)")
+
+    elapsed = time.time() - start_time
+    print("=" * 74)
+    print(f"  RESULTS: ALL 4 UNIT TESTS PASSED in {elapsed:.2f}s (100% Success Rate)")
+    print("=" * 74 + "\n")

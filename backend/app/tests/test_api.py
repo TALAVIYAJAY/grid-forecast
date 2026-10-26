@@ -85,10 +85,75 @@ def test_raw_data_logic():
     assert data["windfor"]["selected_day_ahead_count"] == 24
 
 if __name__ == "__main__":
-    test_health_logic()
-    test_get_dates_logic()
-    test_evaluation_logic()
-    test_monthly_summary_logic()
+    import time
+    if sys.platform == "win32":
+        try:
+            sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        except Exception:
+            pass
+
+    start_time = time.time()
+    
+    print("\n" + "=" * 74)
+    print("  GRIDFORECAST: Automated Integration & Data Integrity Test Suite")
+    print("=" * 74)
+    
+    # 1. Health check & records assertion
+    t0 = time.time()
+    data_health = get_health()
+    assert data_health["status"] == "HEALTHY"
+    assert data_health["actual_wind_records"] > 1400
+    assert data_health["forecast_records"] > 15000
+    ms = (time.time() - t0) * 1000
+    print(f"  [PASS] test_health_endpoint ............. OK  ({ms:5.1f}ms)")
+    print(f"         + Database Status: HEALTHY | {data_health['actual_wind_records']:,} Actuals | {data_health['forecast_records']:,} Forecasts")
+
+    # 2. January dates assertion
+    t0 = time.time()
+    data_dates = get_dates()
+    assert data_dates["count"] == 31
+    assert "2026-01-01" in data_dates["dates"]
+    assert "2026-01-31" in data_dates["dates"]
+    ms = (time.time() - t0) * 1000
+    print(f"  [PASS] test_january_delivery_dates ...... OK  ({ms:5.1f}ms)")
+    print(f"         + Date Range: 2026-01-01 to 2026-01-31 (31 Distinct Delivery Days)")
+
+    # 3. Day-Ahead Gate Closure Alignment (11:00 GMT)
+    t0 = time.time()
+    m = evaluate_day("2026-01-15", gate_closure_hour=11)
+    assert m.date == "2026-01-15"
+    assert len(m.periods) == 48
+    assert m.mae_mw > 0
+    ms = (time.time() - t0) * 1000
+    print(f"  [PASS] test_day_ahead_evaluation ........ OK  ({ms:5.1f}ms)")
+    print(f"         + 2026-01-15 Aligned: 48/48 Periods (MAE: {m.mae_mw:,.1f} MW | wMAPE: {m.wmape_pct:.2f}%)")
+
+    # 4. Monthly Macro Benchmark Aggregate
+    t0 = time.time()
+    m_summary = get_monthly_stats(gate_closure_hour=11)
+    assert m_summary["dates_evaluated"] == 31
+    assert len(m_summary["daily_breakdown"]) == 31
+    ms = (time.time() - t0) * 1000
+    print(f"  [PASS] test_monthly_summary_engine ...... OK  ({ms:5.1f}ms)")
+    print(f"         + Month Aggregate: 31 Days Evaluated (Monthly wMAPE: {m_summary['monthly_wmape_pct']:.2f}%)")
+
+    # 5. Raw Grid Telemetry Stream & Cutoff Audit
+    t0 = time.time()
+    raw = get_raw_data("2026-01-15", dataset="ALL", gate_closure_hour=11)
+    assert raw["fuelhh"]["count"] == 48
+    assert raw["windfor"]["selected_day_ahead_count"] == 24
+    ms = (time.time() - t0) * 1000
+    print(f"  [PASS] test_raw_grid_stream_explorer .... OK  ({ms:5.1f}ms)")
+    print(f"         + Stream Telemetry: 48 FUELHH actuals | {raw['windfor']['total_stream_updates']} WINDFOR rolling updates")
+
+    # 6. CSV Export Stream
+    t0 = time.time()
     test_csv_export_logic()
-    test_raw_data_logic()
-    print("All API integration tests passed successfully!")
+    ms = (time.time() - t0) * 1000
+    print(f"  [PASS] test_csv_export_streaming ........ OK  ({ms:5.1f}ms)")
+    print(f"         + CSV Data Stream: 49 lines verified (Header + 48 Settlement Periods)")
+
+    elapsed = time.time() - start_time
+    print("=" * 74)
+    print(f"  RESULTS: ALL 6 INTEGRATION TESTS PASSED in {elapsed:.2f}s (100% Success Rate)")
+    print("=" * 74 + "\n")
