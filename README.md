@@ -16,7 +16,7 @@
 
 ## 🎬 10-Minute Video Walkthrough
 * **Unlisted YouTube Video Link:** *[Insert Your Video URL Here]*  
-* **Word-for-Word Script & Timestamps:** See [**`VIDEO_WALKTHROUGH_SCRIPT.md`**](VIDEO_WALKTHROUGH_SCRIPT.md) for the complete 10-minute presentation:
+* **Demonstration Breakdown:**
   * **Part 1 (0:00 – 4:30):** Customer Pitch & Trading Console Demonstration (presented to the utility procurement desk).
   * **Part 2 (4:30 – 9:30):** Technical Architecture, Data Pipeline, Math Formulas, and Code Review (presented to the Tech Lead).
 
@@ -138,7 +138,6 @@ docker compose up --build
 ├── .env.example                     # Environment variables template
 ├── .gitignore                       # Git exclusions for secrets, venv, node_modules, and cache
 ├── DOCUMENTATION.md                 # In-depth architectural, mathematical, and domain specification
-├── VIDEO_WALKTHROUGH_SCRIPT.md     # Word-for-word 10-minute presentation script (Customer + Tech Lead)
 └── README.md                        # Master project documentation
 ```
 
