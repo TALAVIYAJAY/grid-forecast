@@ -3,14 +3,36 @@ API Endpoint Integration Tests for GridForecast
 Directly tests route logic and data integrity.
 """
 
-import pytest
-from backend.app.api.routes import (
-    get_health,
-    get_dates,
-    evaluate_day,
-    get_monthly_stats,
-    export_csv
-)
+import sys
+import os
+
+# Ensure project root is in sys.path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../")))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
+
+try:
+    import pytest
+except ImportError:
+    pytest = None
+
+try:
+    from backend.app.api.routes import (
+        get_health,
+        get_dates,
+        evaluate_day,
+        get_monthly_stats,
+        get_raw_data,
+        export_csv
+    )
+except ModuleNotFoundError:
+    from app.api.routes import (
+        get_health,
+        get_dates,
+        evaluate_day,
+        get_monthly_stats,
+        get_raw_data,
+        export_csv
+    )
 
 def test_health_logic():
     data = get_health()
@@ -52,3 +74,21 @@ def test_csv_export_logic():
     lines = content.strip().split("\r\n") if "\r\n" in content else content.strip().split("\n")
     assert len(lines) == 49 # Header + 48 settlement periods
     assert "Settlement Period" in lines[0]
+
+def test_raw_data_logic():
+    data = get_raw_data("2026-01-15", dataset="ALL", gate_closure_hour=11)
+    assert data["delivery_date"] == "2026-01-15"
+    assert data["fuelhh"] is not None
+    assert data["fuelhh"]["count"] == 48
+    assert data["windfor"] is not None
+    assert data["windfor"]["total_stream_updates"] > 100
+    assert data["windfor"]["selected_day_ahead_count"] == 24
+
+if __name__ == "__main__":
+    test_health_logic()
+    test_get_dates_logic()
+    test_evaluation_logic()
+    test_monthly_summary_logic()
+    test_csv_export_logic()
+    test_raw_data_logic()
+    print("All API integration tests passed successfully!")

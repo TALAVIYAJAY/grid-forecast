@@ -1,5 +1,5 @@
 import React from 'react';
-import { Wind, Calendar, Clock, ChevronLeft, ChevronRight, Download, BarChart2, TrendingUp } from 'lucide-react';
+import { Wind, Calendar, Clock, ChevronLeft, ChevronRight, Download, BarChart2, TrendingUp, Database } from 'lucide-react';
 
 interface HeaderProps {
   dates: string[];
@@ -7,8 +7,8 @@ interface HeaderProps {
   onSelectDate: (date: string) => void;
   gateClosureHour: number;
   onSelectGateClosure: (hour: number) => void;
-  activeTab: 'daily' | 'monthly';
-  onSelectTab: (tab: 'daily' | 'monthly') => void;
+  activeTab: 'daily' | 'monthly' | 'raw';
+  onSelectTab: (tab: 'daily' | 'monthly' | 'raw') => void;
   onExportCsv: () => void;
   loading: boolean;
 }
@@ -79,11 +79,22 @@ export const Header: React.FC<HeaderProps> = ({
             <BarChart2 className="h-3.5 w-3.5" />
             <span>January 2026 Benchmark</span>
           </button>
+          <button
+            onClick={() => onSelectTab('raw')}
+            className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+              activeTab === 'raw'
+                ? 'bg-cyan-500 text-white shadow-sm'
+                : 'text-slate-400 hover:text-slate-200'
+            }`}
+          >
+            <Database className="h-3.5 w-3.5" />
+            <span>Raw Grid Data Explorer</span>
+          </button>
         </div>
 
         {/* Controls: Date Picker & Gate Closure */}
         <div className="flex items-center flex-wrap gap-2.5">
-          {activeTab === 'daily' && (
+          {(activeTab === 'daily' || activeTab === 'raw') && (
             <>
               {/* Date Navigation */}
               <div className="flex items-center bg-[#1F2937] rounded-lg border border-slate-700/60 p-0.5">
@@ -138,16 +149,18 @@ export const Header: React.FC<HeaderProps> = ({
                 </select>
               </div>
 
-              {/* CSV Export */}
-              <button
-                onClick={onExportCsv}
-                disabled={loading}
-                className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition"
-                title="Download 48 Settlement Periods CSV"
-              >
-                <Download className="h-3.5 w-3.5 text-slate-400" />
-                <span>Export CSV</span>
-              </button>
+              {/* CSV Export (shown on daily tab) */}
+              {activeTab === 'daily' && (
+                <button
+                  onClick={onExportCsv}
+                  disabled={loading}
+                  className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 border border-slate-700 transition"
+                  title="Download 48 Settlement Periods CSV"
+                >
+                  <Download className="h-3.5 w-3.5 text-slate-400" />
+                  <span>Export CSV</span>
+                </button>
+              )}
             </>
           )}
         </div>

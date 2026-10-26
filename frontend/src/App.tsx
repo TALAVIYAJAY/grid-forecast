@@ -7,7 +7,8 @@ import { ErrorAnalysisChart } from './components/ErrorAnalysisChart';
 import { DayAheadCopilot } from './components/DayAheadCopilot';
 import { SettlementTable } from './components/SettlementTable';
 import { MonthlyBenchmarkView } from './components/MonthlyBenchmarkView';
-import { DailyMetrics, CopilotAdvisory, MonthlySummary } from './types';
+import { RawDataExplorer } from './components/RawDataExplorer';
+import { DailyMetrics, CopilotAdvisory, MonthlySummary, RawGridDataResponse } from './types';
 import { AlertCircle, RefreshCw } from 'lucide-react';
 
 const API_BASE = '/api';
@@ -16,15 +17,17 @@ export const App: React.FC = () => {
   const [dates, setDates] = useState<string[]>([]);
   const [selectedDate, setSelectedDate] = useState<string>('2026-01-15');
   const [gateClosureHour, setGateClosureHour] = useState<number>(11);
-  const [activeTab, setActiveTab] = useState<'daily' | 'monthly'>('daily');
+  const [activeTab, setActiveTab] = useState<'daily' | 'monthly' | 'raw'>('daily');
 
   const [metrics, setMetrics] = useState<DailyMetrics | null>(null);
   const [advisory, setAdvisory] = useState<CopilotAdvisory | null>(null);
   const [monthlySummary, setMonthlySummary] = useState<MonthlySummary | null>(null);
+  const [rawData, setRawData] = useState<RawGridDataResponse | null>(null);
 
   const [loadingMetrics, setLoadingMetrics] = useState<boolean>(true);
   const [loadingAdvisory, setLoadingAdvisory] = useState<boolean>(false);
   const [loadingMonthly, setLoadingMonthly] = useState<boolean>(false);
+  const [loadingRawData, setLoadingRawData] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   // 1. Fetch available dates on load
@@ -112,6 +115,26 @@ export const App: React.FC = () => {
       fetchMonthly();
     }
   }, [activeTab, gateClosureHour, monthlySummary]);
+
+  // 5. Fetch Raw Grid Data when raw tab is active, or date/cutoff changes
+  useEffect(() => {
+    if (activeTab === 'raw' && selectedDate) {
+      const fetchRawData = async () => {
+        setLoadingRawData(true);
+        try {
+          const res = await axios.get(
+            `${API_BASE}/raw-data?date=${selectedDate}&gate_closure_hour=${gateClosureHour}`
+          );
+          setRawData(res.data);
+        } catch (err: any) {
+          console.error('Failed to load raw data', err);
+        } finally {
+          setLoadingRawData(false);
+        }
+      };
+      fetchRawData();
+    }
+  }, [activeTab, selectedDate, gateClosureHour]);
 
   // Handle CSV Download
   const handleExportCsv = () => {
@@ -210,6 +233,16 @@ export const App: React.FC = () => {
             summary={monthlySummary}
             loading={loadingMonthly}
             onSelectDate={handleDrillDownDate}
+          />
+        )}
+
+        {/* Tab 3: Raw Grid Data Explorer & Elexon Telemetry Audit */}
+        {activeTab === 'raw' && (
+          <RawDataExplorer
+            rawData={rawData}
+            loading={loadingRawData}
+            selectedDate={selectedDate}
+            gateClosureHour={gateClosureHour}
           />
         )}
       </main>

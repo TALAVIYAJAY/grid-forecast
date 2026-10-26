@@ -6,20 +6,33 @@ Uses Google Gemini API with Tenacity retries and Primary / Backup model fallback
 - Offline Fallback: Deterministic Power Rules Engine
 """
 
+from __future__ import annotations
+
 import os
 import json
 import logging
 import asyncio
 from typing import Dict, Any, Optional
 
-from google import genai
-from google.genai import types
-from tenacity import (
-    AsyncRetrying,
-    retry_if_exception_type,
-    stop_after_attempt,
-    wait_exponential,
-)
+try:
+    from google import genai
+    from google.genai import types
+    HAS_GENAI = True
+except ImportError:
+    genai = None
+    types = None
+    HAS_GENAI = False
+
+try:
+    from tenacity import (
+        AsyncRetrying,
+        retry_if_exception_type,
+        stop_after_attempt,
+        wait_exponential,
+    )
+    HAS_TENACITY = True
+except ImportError:
+    HAS_TENACITY = False
 
 try:
     from app.config import settings
@@ -38,6 +51,8 @@ BACKUP_MODEL = "gemini-3.5-flash"
 
 
 def get_generation_config():
+    if not HAS_GENAI or not types:
+        return None
     return types.GenerateContentConfig(
         temperature=0.2,
         response_mime_type="application/json"
@@ -142,7 +157,7 @@ Return ONLY valid JSON without Markdown fences or backticks.
 """
 
 
-async def _execute_gemini_request_with_retries(client: genai.Client, model_name: str, prompt: str) -> str:
+async def _execute_gemini_request_with_retries(client: Any, model_name: str, prompt: str) -> str:
     """Execute model request using Tenacity async exponential retries."""
     async for attempt in AsyncRetrying(
         retry=retry_if_exception_type(Exception),
@@ -169,8 +184,8 @@ async def generate_gemini_advisory(metrics: DailyMetrics) -> Dict[str, Any]:
     3. Fallback to Local Rule-Based Engine if both fail or if no API key
     """
     api_key = settings.gemini_api_key or os.getenv("GEMINI_API_KEY", "")
-    if not api_key:
-        logger.info("No GEMINI_API_KEY found; activating deterministic rules engine.")
+    if not HAS_GENAI or not HAS_TENACITY or not api_key:
+        logger.info("Gemini SDK not present or no GEMINI_API_KEY found; activating deterministic rules engine.")
         return generate_local_rule_based_advisory(metrics)
 
     client = genai.Client(api_key=api_key)

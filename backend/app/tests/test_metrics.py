@@ -2,8 +2,22 @@
 Unit Tests for GridForecast Metrics & Day-Ahead Alignment Engine
 """
 
-import pytest
-from backend.app.services.metrics_engine import calculate_metrics
+import sys
+import os
+
+# Ensure project root is in sys.path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../")))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../")))
+
+try:
+    import pytest
+except ImportError:
+    pytest = None
+
+try:
+    from backend.app.services.metrics_engine import calculate_metrics
+except ModuleNotFoundError:
+    from app.services.metrics_engine import calculate_metrics
 
 def test_metrics_calculation_perfect_match():
     records = [
@@ -59,3 +73,10 @@ def test_wmape_handles_calm_wind():
     # wMAPE = 100 / 500 * 100% = 20.0%
     assert m.wmape_pct == 20.0
     assert m.mae_mw == 50.0
+
+if __name__ == "__main__":
+    test_metrics_calculation_perfect_match()
+    test_metrics_over_forecasting()
+    test_metrics_under_forecasting()
+    test_wmape_handles_calm_wind()
+    print("All metric tests passed successfully!")

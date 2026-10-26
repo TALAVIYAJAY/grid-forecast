@@ -57,3 +57,58 @@ export interface MonthlySummary {
   monthly_wmape_pct: number;
   daily_breakdown: DailySummaryItem[];
 }
+
+export interface RawFuelhhRecord {
+  id: number;
+  settlement_period: number;
+  settlement_date: string;
+  start_time: string;
+  publish_time: string;
+  generation_mw: number;
+  fuel_type: string;
+  dataset: string;
+  resolution: string;
+}
+
+export interface RawWindforRecord {
+  id: number;
+  start_time: string;
+  publish_time: string;
+  generation_mw: number;
+  dataset: string;
+  resolution: string;
+  is_before_cutoff: boolean;
+  is_selected: boolean;
+  status: 'LOCKED_DAY_AHEAD' | 'SUPERSEDED_PRE_CUTOFF' | 'POST_CUTOFF_INTRADAY';
+  status_label: string;
+  lead_hours: number | null;
+}
+
+export interface RawFuelhhSummary {
+  dataset_name: string;
+  elexon_url: string;
+  count: number;
+  total_energy_gwh: number;
+  avg_generation_mw: number;
+  min_generation_mw: number;
+  max_generation_mw: number;
+  records: RawFuelhhRecord[];
+}
+
+export interface RawWindforSummary {
+  dataset_name: string;
+  elexon_url: string;
+  total_stream_updates: number;
+  selected_day_ahead_count: number;
+  superseded_pre_cutoff_count: number;
+  post_cutoff_intraday_count: number;
+  gate_closure_cutoff_utc: string;
+  records: RawWindforRecord[];
+}
+
+export interface RawGridDataResponse {
+  delivery_date: string;
+  gate_closure_cutoff_utc: string;
+  fuelhh: RawFuelhhSummary;
+  windfor: RawWindforSummary;
+}

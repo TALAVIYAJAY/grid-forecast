@@ -20,7 +20,8 @@ try:
     from app.services.day_ahead_service import (
         get_available_dates,
         get_day_ahead_evaluation,
-        get_monthly_summary
+        get_monthly_summary,
+        get_raw_grid_data
     )
     from app.services.ai_copilot import (
         generate_gemini_advisory,
@@ -32,7 +33,8 @@ except ModuleNotFoundError:
     from backend.app.services.day_ahead_service import (
         get_available_dates,
         get_day_ahead_evaluation,
-        get_monthly_summary
+        get_monthly_summary,
+        get_raw_grid_data
     )
     from backend.app.services.ai_copilot import (
         generate_gemini_advisory,
@@ -132,6 +134,26 @@ def get_monthly_stats(
         return get_monthly_summary(gate_closure_hour=gate_closure_hour, db_path=settings.db_path)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to calculate monthly summary: {str(e)}")
+
+@router.get("/raw-data")
+def get_raw_data(
+    date: str = Query(..., description="Delivery date e.g. 2026-01-15"),
+    dataset: str = Query("ALL", description="Dataset to retrieve: ALL | FUELHH | WINDFOR"),
+    gate_closure_hour: int = Query(settings.default_gate_closure_hour, ge=0, le=23)
+):
+    """
+    Retrieve raw Elexon BMRS records (FUELHH actuals and WINDFOR forecast streams) for full auditability.
+    Enables interactive exploration of raw publish times, timestamps, and D-1 cutoff selection.
+    """
+    try:
+        return get_raw_grid_data(
+            delivery_date_str=date,
+            dataset=dataset.upper(),
+            gate_closure_hour=gate_closure_hour,
+            db_path=settings.db_path
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to fetch raw grid data for {date}: {str(e)}")
 
 @router.get("/export-csv")
 def export_csv(
